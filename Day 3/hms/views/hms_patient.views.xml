@@ -1,0 +1,73 @@
+<odoo>
+    <data>
+        <record id="patient_action" model="ir.actions.act_window">
+            <field name="name">Patients</field>
+            <field name="res_model">hms.patient</field>
+        </record>
+
+        <record id="patient_tree_view" model="ir.ui.view">
+            <field name="name">Patient Tree View</field>
+            <field name="model">hms.patient</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="first_name"/>
+                    <field name="last_name"/>
+                    <field name="birth_date"/>
+                    <field name="age"/>
+                    <field name="email"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="patient_form_view" model="ir.ui.view">
+            <field name="name">Patient Form View</field>
+            <field name="model">hms.patient</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group string="Personal Information">
+                                <field name="first_name"/>
+                                <field name="last_name"/>
+                                <field name="email"/>
+                                <field name="birth_date"/>
+                                <field name="age"/>
+                            </group>    
+                        
+                            <group string="Additional Information">
+                                <field name="address"/>
+                                <field name="image"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                            <group string="Medical Information">
+                                <field name="history" attrs="{'invisible': [('age', '&lt;', 50)]}"/>
+                                <field name="pcr"/>
+                                <field name="cr_ratio" attrs="{'required': [('pcr', '=', True)]}" />
+                                <field name="blood_type"/>
+                            </group>
+                            <group string="Log History">
+                                <field name="log_history_ids">
+                                    <tree>
+                                        <field name="create_uid"/>
+                                        <field name="description"/>
+                                        <field name="create_date"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </group>
+                        <group string="Department Information">
+                            <field name="department_id" domain="[('is_opened', '=', True)]" /> 
+                            <field name="department_capacity"/>
+                            <field name="doctor_ids" widget="many2many_tags" domain="[('department_id', '=', department_id)]" attrs="{'readonly': [('department_id', '=', False)]}" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="hms_menu" name="HMS"/>
+        <menuitem id="patients_menu" name="Patients" parent="hms_menu" sequence ="2" action="patient_action"/>
+    </data>
+</odoo>
